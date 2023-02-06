@@ -13,6 +13,7 @@ public class Modele {
     private static final int largeur = 15;
 
     /** Constantes **/
+    /** Vie maximal pour un personnage**/
     public static final int ViePersonnage = 20;
     private final int nbPersonnage = 3;
 
@@ -26,6 +27,16 @@ public class Modele {
     /** La liste des joueurs **/
     private List<Personnage> personnages;
 
+    /**
+     * Attributs de stockage
+     */
+    private int stockageEau = 0;
+    private int stockageBois = 0;
+    private int stockageNourriture = 0;
+
+    /**
+     * Constructeur du Modele
+     */
     public Modele(){
         zones = new Zone[hauteur][largeur];
         for(int i = 0; i<largeur;i++){
@@ -39,5 +50,53 @@ public class Modele {
         for (int i = 0; i < nbPersonnage; i++)
             personnages.add(new Personnage(i,hauteurEpave,largeurEpave));
 
+    }
+
+    /**
+     * Renvoie la liste des personnages
+     * @return, la liste
+     */
+    public List<Personnage> getPersonnages() {
+        return personnages;
+    }
+
+    /**
+     * Déplace le joueur s'il peut y aller
+     */
+    public void deplacePersonnage(int numeroPersonnage, int x, int y){
+        if ((x > 0 && x < largeur)&&(y > 0 && y < hauteur)){
+            Zone z = zones[personnages.get(numeroPersonnage).getX()][personnages.get(numeroPersonnage).getY()];
+            switch (z.getType()) {
+                case Mer -> {
+                }
+                default -> {personnages.get(numeroPersonnage).deplace(x, y);}
+            }
+        }
+    }
+
+    public void recolteRessource(int numeroPersonnage){
+        /*for (Personnage p :personnages) {
+            Zone z = zones[p.getX()][p.getY()];
+            switch (z){
+                Case
+            }
+        }*/
+        Zone z = zones[personnages.get(numeroPersonnage).getX()][personnages.get(numeroPersonnage).getY()];
+        switch (z.getType()) {
+            case Arbre -> stockageBois += 10;
+            case Buisson -> stockageNourriture += 10;
+            case Eau -> stockageEau += 10;
+            default -> {}
+        }
+    }
+
+    /**
+     * Renvoie la zone qui se trouve aux coordonnées fournis
+     * @param x, l'axe des X
+     * @param y, l'axe des Y
+     * @return la zone souhaitée
+     */
+    public Zone getZone(int x, int y){
+        return zones[x][y];
     }
 }
