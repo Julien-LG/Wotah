@@ -1,4 +1,4 @@
 public class Modele {
 
-    public int ViePersonnage = 20;
+    public final static int ViePersonnage = 20;
 }
