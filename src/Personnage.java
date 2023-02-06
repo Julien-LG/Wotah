@@ -41,4 +41,18 @@ public class Personnage {
         return numero;
     }
 
+    /**
+     * Déplace le personnage, dans un endroit prealablement testé
+     * @param x, represente l'axe des x
+     * @param y, represente l'axe des y
+     */
+    public void deplace(int x, int y){
+            this.x = x;
+            this.y = y;
+    }
+
+    @Override
+    public String toString() {
+        return  "Joueur " + numero+ " {" + "x=" + x + ", y=" + y + ", vie=" + vie + "}";
+    }
 }
