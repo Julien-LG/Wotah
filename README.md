@@ -1,2 +1,2 @@
 # Wotah
-  Meileur projet après celudi des buzz buzz e fin de semestre pour le cours PCII.
+  Meileur projet après celui des buzz buzz de fin de semestre pour le cours PCII.
