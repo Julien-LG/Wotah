@@ -1,11 +1,6 @@
-public class Zone {
-    /**
-     * Type énuméré qui indique le type de la zone
-     */
-    public enum TypeZone {
-        Sol, Buisson, arbre, eau, Mer, Epave;
-    }
 
+
+public class Zone {
     /** On stocke les coordonnées pour pouvoir les passer au modèle.**/
     private final int x, y;
 
