@@ -14,7 +14,7 @@ class CVue {
     static private JFrame frame = new JFrame();
 
     {
-        frame.setTitle("Wotah");
+        frame.setTitle("Forbidden Island");
     }
 
     static private JPanel game = new JPanel();

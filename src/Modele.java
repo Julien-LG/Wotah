@@ -43,8 +43,6 @@ public class Modele {
         for(int i = 0; i<largeur;i++){
             for(int j = 0; j<hauteur; j++){
                 zones[i][j] = new Zone(i, j, TypeZone.Mer);
-                //On commence par remplir la grille entièrement d'eau, puis on complètera la carte plus tard
-                zones[i][j] = new Zone(i, j, TypeZone.Mer);
             }
         }
 
@@ -103,5 +101,4 @@ public class Modele {
     public Zone getZone(int x, int y){
         return zones[x][y];
     }
-
 }
