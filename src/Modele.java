@@ -1,4 +1,4 @@
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Type énuméré qui indique le type de la zone
@@ -9,8 +9,8 @@ enum TypeZone {
 
 public class Modele {
     /** Taille de la grille **/
-    private static final int hauteur = 15;
-    private static final int largeur = 15;
+    public static final int hauteur = 6;
+    private static final int largeur = 6;
 
     /** Constantes **/
     /** Vie maximal pour un personnage**/
@@ -25,7 +25,7 @@ public class Modele {
     private final Zone[][] zones;
 
     /** La liste des joueurs **/
-    private List<Personnage> personnages;
+    private ArrayList<Personnage> personnages;
 
     /**
      * Attributs de stockage
@@ -38,6 +38,7 @@ public class Modele {
      * Constructeur du Modele
      */
     public Modele(){
+
         zones = new Zone[hauteur][largeur];
         for(int i = 0; i<largeur;i++){
             for(int j = 0; j<hauteur; j++){
@@ -47,6 +48,7 @@ public class Modele {
 
         zones[hauteurEpave-1][largeurEpave-1] = new Zone(hauteurEpave-1,largeurEpave-1,TypeZone.Epave);
 
+        personnages = new ArrayList<Personnage>();
         for (int i = 0; i < nbPersonnage; i++)
             personnages.add(new Personnage(i,hauteurEpave,largeurEpave));
 
@@ -56,7 +58,7 @@ public class Modele {
      * Renvoie la liste des personnages
      * @return, la liste
      */
-    public List<Personnage> getPersonnages() {
+    public ArrayList<Personnage> getPersonnages() {
         return personnages;
     }
 
@@ -83,9 +85,9 @@ public class Modele {
         }*/
         Zone z = zones[personnages.get(numeroPersonnage).getX()][personnages.get(numeroPersonnage).getY()];
         switch (z.getType()) {
+            case Eau -> stockageEau += 10;
             case Arbre -> stockageBois += 10;
             case Buisson -> stockageNourriture += 10;
-            case Eau -> stockageEau += 10;
             default -> {}
         }
     }

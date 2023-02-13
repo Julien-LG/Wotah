@@ -1,4 +1,7 @@
-
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class Zone {
     /** On stocke les coordonnées pour pouvoir les passer au modèle.**/
@@ -9,11 +12,21 @@ public class Zone {
      */
     private TypeZone type;
 
+    public BufferedImage texture;
+
+    
+
     /** Constructeur de la zone **/
     public Zone(int x, int y, TypeZone type){
         this.x = x;
         this.y = y;
         this.type = type;
+
+        try {
+            this.texture = ImageIO.read(new File("res\\images\\tile.png"));
+        } catch (IOException ie) {
+            ie.printStackTrace();
+        }
     }
 
     /**
