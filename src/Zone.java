@@ -64,4 +64,9 @@ public class Zone {
     public void setType(TypeZone type){
         this.type = type;
     }
+
+    public boolean estSurEau() {
+        return getType()==TypeZone.Eau;
+        }
+
 }
