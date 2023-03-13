@@ -54,6 +54,14 @@ public class Modele {
 
     }
 
+    public void genereIle(){
+        for(int i = largeurEpave; i<largeur;i++){
+            for(int j = hauteurEpave; j<hauteur; j++){
+                zones[i][j] = new Zone(i, j, TypeZone.Sol);
+            }
+        }
+    }
+
     /**
      * Renvoie la liste des personnages
      * @return, la liste
