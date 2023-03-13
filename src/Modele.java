@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Type énuméré qui indique le type de la zone
@@ -9,8 +10,8 @@ enum TypeZone {
 
 public class Modele {
     /** Taille de la grille **/
-    public static final int hauteur = 6;
-    private static final int largeur = 6;
+    public static final int hauteur = 10;
+    private static final int largeur = 10;
 
     /** Constantes **/
     /** Vie maximal pour un personnage**/
@@ -70,17 +71,37 @@ public class Modele {
         return personnages;
     }
 
+    @Override
+    public String toString() {
+        return "Modele{" +
+                "nbPersonnage=" + nbPersonnage +
+                ", personnages=" + personnages +
+                ", stockageEau=" + stockageEau +
+                ", stockageBois=" + stockageBois +
+                ", stockageNourriture=" + stockageNourriture +
+                '}';
+    }
+
+    public int getNbPersonnage() {
+        return nbPersonnage;
+    }
+
     /**
      * Déplace le joueur s'il peut y aller
      */
     public void deplacePersonnage(int numeroPersonnage, int x, int y){
+        System.out.println("Deplacement du personnage");
         if ((x > 0 && x < largeur)&&(y > 0 && y < hauteur)){
+            System.out.println("valeur vérifié ; " + x + y);
             Zone z = zones[personnages.get(numeroPersonnage).getX()][personnages.get(numeroPersonnage).getY()];
+            System.out.println("type de la zone " + z.getType());
             switch (z.getType()) {
                 case Mer -> {
                 }
                 default -> {personnages.get(numeroPersonnage).deplace(x, y);}
             }
+            System.out.println("je check le perso : " + personnages.get(numeroPersonnage).toString());
+
         }
     }
 

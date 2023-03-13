@@ -47,8 +47,9 @@ public class Personnage {
      * @param y, represente l'axe des y
      */
     public void deplace(int x, int y){
-            this.x = x;
-            this.y = y;
+        System.out.println("x :" + x + "y :" + y);
+        this.x = x;
+        this.y = y;
     }
 
     @Override

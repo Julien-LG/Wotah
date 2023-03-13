@@ -6,7 +6,7 @@ class VueGrille extends JPanel implements Observer {
 
     private Modele modele;
 
-    private final static int TAILLE = 100;
+    private final static int TAILLE = 85;
 
     public VueGrille(Modele modele) {
         this.modele = modele;
