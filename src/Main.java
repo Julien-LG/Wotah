@@ -23,7 +23,7 @@ public class Main {
             modele.deplacePersonnage(i, coordX.nextInt(),coordY.nextInt());
         }*/
 
-        Scanner coordX = new Scanner(System.in);  // Create a Scanner object
+        /*Scanner coordX = new Scanner(System.in);  // Create a Scanner object
         System.out.println("Entrer le X");
 
         Scanner coordY = new Scanner(System.in);  // Create a Scanner object
@@ -32,7 +32,7 @@ public class Main {
         System.out.println("le x est : " + coordX.nextInt() + " le y est : " + coordY.nextInt());  // Output user input
         modele.deplacePersonnage(0, coordX.nextInt(),coordY.nextInt());
 
-        System.out.println(modele.toString());
+        System.out.println(modele.toString());*/
     }
 }
 
