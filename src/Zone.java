@@ -5,7 +5,7 @@ import java.io.IOException;
 
 public class Zone {
     /** On stocke les coordonnées pour pouvoir les passer au modèle.**/
-    private final int x, y;
+    public final int x, y;
 
     /**
      * l'attribut type represente le type de la zone, et permet de savoir s'il y a des ressources ou si la zone est praticable
@@ -13,6 +13,7 @@ public class Zone {
     private TypeZone type;
 
     public BufferedImage texture;
+    public BufferedImage texture2;
 
     
 
@@ -23,7 +24,8 @@ public class Zone {
         this.type = type;
 
         try {
-            this.texture = ImageIO.read(new File("res\\images\\tile.png"));
+            this.texture = ImageIO.read(new File("res\\images\\sand.png"));
+            this.texture2 = ImageIO.read(new File("res\\images\\grass.png"));
         } catch (IOException ie) {
             ie.printStackTrace();
         }

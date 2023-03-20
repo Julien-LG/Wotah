@@ -9,20 +9,22 @@ import java.io.IOException;
 // import javax.sound.sampled.AudioSystem;
 // import javax.sound.sampled.Clip;
 
+import java.awt.event.KeyListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
+
 class CVue {
 
     static private JFrame frame = new JFrame();
 
     {
-        frame.setTitle("Forbidden Island");
+        frame.setTitle("Wotah");
     }
 
     static private JPanel game = new JPanel();
     // static private JPanel win = new JPanel();
     // static private JPanel end = new JPanel();
-
-    private VueGrille grille;
-    private VueCommandes commandes;
     
     static BufferedImage img;
     // static BufferedImage lose;
@@ -30,7 +32,7 @@ class CVue {
 
     {
         try {
-            img = ImageIO.read(new File("res\\images\\background.png"));
+            img = ImageIO.read(new File("res\\images\\sea_sprite.png"));
             // lose = ImageIO.read(new File("res\\images\\GameOver.png"));
             // victory = ImageIO.read(new File("res\\images\\win.jpg"));
         } catch (IOException ie) {
@@ -39,24 +41,29 @@ class CVue {
     }
 
     public CVue(Modele modele) {
+        GraphicsEnvironment graphics = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice device = graphics.getDefaultScreenDevice();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setUndecorated(true);
+        frame.setResizable(false);
+        device.setFullScreenWindow(frame);
+        
+        JLabel background = new JLabel(new ImageIcon(img.getScaledInstance(frame.getWidth(), frame.getHeight(), Image.SCALE_DEFAULT)));
+        background.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        background.add(new VueGrille(modele));
 
         game.setLayout(new BorderLayout());
-        JLabel background = new JLabel(new ImageIcon(img.getScaledInstance(1650, 720, Image.SCALE_DEFAULT)));
-
         game.add(background);
 
-        background.setLayout(new FlowLayout(FlowLayout.LEFT, 75, 75));
-
-        grille = new VueGrille(modele);
-        background.add(grille);
-        commandes = new VueCommandes(modele);
-        background.add(commandes);
-
         frame.setContentPane(game);
-
         frame.pack();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
+
+        KeyListener kl = new KeyAdapter() {
+            public void keyPressed(KeyEvent evt) {
+                if(evt.getKeyCode() == KeyEvent.VK_ESCAPE)
+                    System.exit(0);
+            }
+        }; frame.addKeyListener(kl);
     }
 
     // static void gameOver() {

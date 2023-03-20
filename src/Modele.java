@@ -6,7 +6,7 @@ import java.util.List;
  * Type énuméré qui indique le type de la zone
  */
 enum TypeZone {
-    Sol, Buisson, Arbre, Eau, Mer, Epave, PousseArbre, PousseBuisson;
+    Sol, Buisson, Arbre, Eau, Mer, Sable, Epave, PousseArbre, PousseBuisson;
 }
 
 public class Modele {
@@ -15,7 +15,7 @@ public class Modele {
 
     /** Taille de la grille **/
     public static final int hauteur = 10;
-    private static final int largeur = 10;
+    private static final int largeur = 15;
 
     /** Constantes **/
     /** Vie maximal pour un personnage**/
@@ -23,8 +23,8 @@ public class Modele {
     private final int nbPersonnage = 3;
 
     /** Eplacement de l'epave (et donc des joueurs) **/
-    private static final int hauteurEpave = 5;
-    private static final int largeurEpave = 5;
+    private static final int hauteurEpave = 0;
+    private static final int largeurEpave = 4;
 
     /** La grille qui contient les zones **/
     private final Zone[][] zones;
@@ -56,32 +56,42 @@ public class Modele {
      * Constructeur du Modele
      */
     public Modele(){
-
-        zones = new Zone[hauteur][largeur];
+        zones = new Zone[largeur][hauteur];
         for(int i = 0; i<largeur;i++){
             for(int j = 0; j<hauteur; j++){
-                zones[i][j] = new Zone(i, j, TypeZone.Mer);
+                if (i == 0 || (i == 1 && (j == 0 || j == 1 || j == 2 || j == hauteur-1 || j == hauteur-2 || j == hauteur-3)) || (i == 2 && (j == 0 || j == hauteur-1)))
+                    zones[i][j] = new Zone(i, j, TypeZone.Mer);
+                else
+                    zones[i][j] = new Zone(i, j, TypeZone.Sol);
             }
         }
 
-        zones[hauteurEpave-1][largeurEpave-1] = new Zone(hauteurEpave-1,largeurEpave-1,TypeZone.Epave);
+        for(int i = 0; i<largeur; i++){
+            for(int j = 0; j<hauteur; j++){
+                if (zones[i][j].getType() == TypeZone.Sol && ((j < hauteur-1 && zones[i][j+1].getType() == TypeZone.Mer) || (j > 0 && zones[i][j-1].getType() == TypeZone.Mer) ||
+                        (i > 0 && zones[i-1][j].getType() == TypeZone.Mer) || (i > 0 && j < hauteur-1 && zones[i-1][j+1].getType() == TypeZone.Mer) || (i > 0 && j > 0 && zones[i-1][j-1].getType() == TypeZone.Mer)))
+                    zones[i][j] = new Zone(i, j, TypeZone.Sable);
+            }
+        }
+
+        zones[hauteurEpave][largeurEpave] = new Zone(hauteurEpave-1, largeurEpave-1, TypeZone.Epave);
 
         personnages = new ArrayList<Personnage>();
         for (int i = 0; i < nbPersonnage; i++)
-            personnages.add(new Personnage(i,hauteurEpave,largeurEpave));
+            personnages.add(new Personnage(i, hauteurEpave, largeurEpave));
 
     }
 
     /**
      * Génére l'ile avec ses différentes Zones
      */
-    public void genereIle(){
+    /*public void genereIle(){
         for(int i = largeurEpave; i<largeur;i++){
             for(int j = hauteurEpave; j<hauteur; j++){
                 zones[i][j] = new Zone(i, j, TypeZone.Sol);
             }
         }
-    }
+    }*/
 
     /**
      * Renvoie la liste des personnages
@@ -252,5 +262,13 @@ public class Modele {
      */
     public Zone getZone(int x, int y){
         return zones[x][y];
+    }
+
+    public static int getHeight(){
+        return hauteur;
+    }
+
+    public static int getWidth(){
+        return largeur;
     }
 }

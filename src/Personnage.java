@@ -1,3 +1,8 @@
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
 public class Personnage {
     /**
      * Attributs du personnage
@@ -6,6 +11,15 @@ public class Personnage {
     private int x, y;
     private int vie;
     private boolean vivant;
+    public BufferedImage texture;
+
+    {
+        try {
+            texture = ImageIO.read(new File("res\\images\\ptjgqon6k5j71.jpg"));
+        } catch (IOException ie) {
+            ie.printStackTrace();
+        }
+    }
 
     /**
      * Constructeur du personnage

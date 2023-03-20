@@ -3,9 +3,8 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Modele modele = new Modele();
-        modele.genereIle();
         //Partie graphique
-        //CVue vue = new CVue(modele);
+        CVue vue = new CVue(modele);
 
         System.out.println(modele.toString());
         //for (int i = 0; i< modele.getNbPersonnage(); i++){
