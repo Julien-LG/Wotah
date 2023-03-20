@@ -6,7 +6,24 @@ public class Main {
         //Partie graphique
         CVue vue = new CVue(modele);
 
-        System.out.println(modele.toString());
+        //System.out.println(modele.toString());
+
+
+        new Thread() {
+            public void run(){
+                while(modele.getTimerTempete() > 0){
+                    try {
+                        Thread.sleep(1000);
+                        System.out.println("coucou");
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }.start();
+
+
+
         //for (int i = 0; i< modele.getNbPersonnage(); i++){
         /*for (int i = 0; i< 1; i++){
 

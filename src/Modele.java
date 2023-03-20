@@ -52,6 +52,8 @@ public class Modele {
 
     private int timerPousse = 5;
 
+    private Controleur c;
+
     /**
      * Constructeur du Modele
      */
@@ -80,6 +82,7 @@ public class Modele {
         for (int i = 0; i < nbPersonnage; i++)
             personnages.add(new Personnage(i, hauteurEpave, largeurEpave));
 
+        this.c = new Controleur(this);
     }
 
     /**
@@ -270,5 +273,13 @@ public class Modele {
 
     public static int getWidth(){
         return largeur;
+    }
+
+    public int getTimerTempete() {
+        return timerTempete;
+    }
+
+    public void setTimerTempete(int timerTempete) {
+        this.timerTempete = timerTempete;
     }
 }
