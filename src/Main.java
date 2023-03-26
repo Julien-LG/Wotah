@@ -6,6 +6,7 @@ public class Main {
             Modele modele = new Modele();
             CVue vue = new CVue(modele);
             new Controleur(modele, vue);
+            new ControleurDragAndDrop(modele, vue);
         });
 
         /*new Thread() { // Timer de la tempete (la fin du jeu)

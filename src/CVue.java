@@ -1,8 +1,6 @@
 import java.awt.*;
 import javax.swing.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 
 class CVue {
 
@@ -45,6 +43,14 @@ class CVue {
 
     public void addKeyListener(KeyListener kl) {
         frame.addKeyListener(kl);
+    }
+
+    public void addMouseListener(MouseListener mul) {
+        frame.addMouseListener(mul);
+    }
+
+    public void addMouseMotionListener(MouseMotionListener mtl) {
+        frame.addMouseMotionListener(mtl);
     }
 
     // static void gameOver() {
@@ -96,4 +102,8 @@ class CVue {
     //     } catch (Exception ie) {
     //     }
     // }
+
+    public JPanel getGame() {
+        return game;
+    }
 }

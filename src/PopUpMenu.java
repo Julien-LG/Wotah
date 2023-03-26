@@ -10,9 +10,12 @@ public class PopUpMenu extends JPopupMenu implements ActionListener {
     JMenuItem item4;
 
     private JFrame frame;
+    private JPanel panel;
 
-    public PopUpMenu(final JFrame frame) {
-        this.frame = frame;
+    //public PopUpMenu(final JFrame frame) {
+    public PopUpMenu(final JPanel panel) {
+        //this.frame = frame;
+        this.panel = panel;
 
         item1 = new JMenuItem("Récolter");
         item2 = new JMenuItem("Planter");

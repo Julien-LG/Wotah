@@ -24,6 +24,7 @@ class VueGrille extends JPanel {
             g.drawImage(zone.getTexture().getScaledInstance(size, size, Image.SCALE_DEFAULT), zone.getX() * size, zone.getY() * size, null);
         } for(Personnage p : modele.getPersonnages()) {
             g.drawImage(p.getTexture().getScaledInstance(2 * size / 3, 2 * size / 3, Image.SCALE_DEFAULT), p.getX() * size, p.getY() * size, null);
+            System.out.println("personnage en " + p.getX() * size + " " + p.getY() * size);
         }
     }
 }
