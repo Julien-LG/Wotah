@@ -1,28 +1,56 @@
 import java.awt.*;
 import javax.swing.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyAdapter;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+// import javax.sound.sampled.AudioInputStream;
+// import javax.sound.sampled.AudioSystem;
+// import javax.sound.sampled.Clip;
+
 import java.awt.event.KeyListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
 
 class CVue {
 
-    private JFrame frame = new JFrame();
-    private JPanel game = new JPanel();
-    private VueGrille vueGrille;
+    static private JFrame frame = new JFrame();
+
+    {
+        frame.setTitle("Wotah");
+    }
+
+    static private JPanel game = new JPanel();
+    // static private JPanel win = new JPanel();
+    // static private JPanel end = new JPanel();
+    
+    static BufferedImage img;
+    // static BufferedImage lose;
+    // static BufferedImage victory;
+
+    {
+        try {
+            img = ImageIO.read(new File("res\\images\\sea_sprite.png"));
+            // lose = ImageIO.read(new File("res\\images\\GameOver.png"));
+            // victory = ImageIO.read(new File("res\\images\\win.jpg"));
+        } catch (IOException ie) {
+            ie.printStackTrace();
+        }
+    }
 
     public CVue(Modele modele) {
-
+        GraphicsEnvironment graphics = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice device = graphics.getDefaultScreenDevice();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setUndecorated(true);
         frame.setResizable(false);
-        frame.setTitle("Wotah");
+        device.setFullScreenWindow(frame);
         
-        GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(frame);
-        
-        JLabel background = new JLabel(new ImageIcon(Textures.texture_sea.getTexture().getScaledInstance(frame.getWidth(), frame.getHeight(), Image.SCALE_DEFAULT)));
+        JLabel background = new JLabel(new ImageIcon(img.getScaledInstance(frame.getWidth(), frame.getHeight(), Image.SCALE_DEFAULT)));
         background.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
-        vueGrille = new VueGrille(modele);
-        background.add(vueGrille);
+        background.add(new VueGrille(modele));
 
         game.setLayout(new BorderLayout());
         game.add(background);
@@ -36,15 +64,6 @@ class CVue {
                     System.exit(0);
             }
         }; frame.addKeyListener(kl);
-        repaintVueGrille();
-    }
-    
-    public void repaintVueGrille() {
-        vueGrille.repaint();
-    }
-
-    public void addKeyListener(KeyListener kl) {
-        frame.addKeyListener(kl);
     }
 
     // static void gameOver() {

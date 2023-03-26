@@ -1,15 +1,21 @@
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class Zone {
     /** On stocke les coordonnées pour pouvoir les passer au modèle.**/
-    private final int x, y;
+    public final int x, y;
 
     /**
      * l'attribut type represente le type de la zone, et permet de savoir s'il y a des ressources ou si la zone est praticable
      */
     private TypeZone type;
 
-    private BufferedImage texture;
+    public BufferedImage texture;
+    public BufferedImage texture2;
+
+    
 
     /** Constructeur de la zone **/
     public Zone(int x, int y, TypeZone type){
@@ -17,7 +23,12 @@ public class Zone {
         this.y = y;
         this.type = type;
 
-        switchTexture(type);
+        try {
+            this.texture = ImageIO.read(new File("res\\images\\sand.png"));
+            this.texture2 = ImageIO.read(new File("res\\images\\grass.png"));
+        } catch (IOException ie) {
+            ie.printStackTrace();
+        }
     }
 
     /**
@@ -54,30 +65,5 @@ public class Zone {
      */
     public void setType(TypeZone type){
         this.type = type;
-        switchTexture(type);
-    }
-
-    public void switchTexture(TypeZone type) {
-        switch (type) {
-            case Sol -> this.texture = Textures.texture_grass.getTexture();
-            case Sable -> this.texture = Textures.texture_sand.getTexture();
-            case Epave -> this.texture = Textures.texture_shipwreck.getTexture();
-            case Arbre -> this.texture = (Math.random() < 0.5) ? Textures.texture_tree.getTexture() : Textures.texture_tree_reversed.getTexture();
-            case Buisson -> this.texture = (Math.random() < 0.5) ? Textures.texture_bushs.getTexture() : Textures.texture_bushs_reversed.getTexture();
-            case Eau -> this.texture = Textures.texture_water.getTexture();
-            default -> this.texture = Textures.texture_shipwreck.getTexture();
-        };
-    }
-
-    public BufferedImage getTexture() {
-        return texture;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
     }
 }

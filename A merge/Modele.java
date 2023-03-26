@@ -1,29 +1,36 @@
-import java.util.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * Type énuméré qui indique le type de la zone
+ */
+enum TypeZone {
+    Sol, Buisson, Arbre, Eau, Mer, Sable, Epave, PousseArbre, PousseBuisson;
+}
 
 public class Modele {
+    /** Nombre de ressources récoltés**/
+    private int nbRecolte = 20;
+
     /** Taille de la grille **/
-    private static final int hauteur = 10;
+    public static final int hauteur = 10;
     private static final int largeur = 15;
+
+    /** Constantes **/
+    /** Vie maximal pour un personnage**/
+    public static final int ViePersonnage = 20;
+    private final int nbPersonnage = 3;
 
     /** Eplacement de l'epave (et donc des joueurs) **/
     private static final int hauteurEpave = 1;
     private static final int largeurEpave = 5;
 
-    /** Vie maximal pour un personnage **/
-    private final int nbPersonnage = 1;
-
-    /** Nombre de personnage présent **/
-    private static final int ViePersonnage = 20;
-
     /** La grille qui contient les zones **/
     private final Zone[][] zones;
 
     /** La liste des joueurs **/
-    private ArrayList<Personnage> personnages = new ArrayList<Personnage>();
-
-    /** Nombre de ressources récoltés**/
-    private int nbRecolte = 20;
+    private ArrayList<Personnage> personnages;
 
     /**
      * Attributs de stockage
@@ -42,42 +49,54 @@ public class Modele {
     /** Temps des timer **/
     private int timerRecolte = 3;
     private int timerPlantation = 3;
+
     private int timerPousse = 5;
 
-    public List<Zone> zonesToRepaint = new ArrayList<Zone>();
+    private Controleur c;
+    private DragAndDrop2 dragAndDrop;
 
     /**
      * Constructeur du Modele
      */
     public Modele(){
-        Random rand = new Random();
         zones = new Zone[largeur][hauteur];
-
-        for(int i = 0; i < largeur; i++){
-            for(int j = 0; j < hauteur; j++){
-                TypeZone type;
-                Boolean isSea = i == 0 || (i == 1 && (j == 0 || j == 1 || j == 2 || j == hauteur-1 || j == hauteur-2 || j == hauteur-3)) || (i == 2 && (j == 0 || j == hauteur-1));
-                boolean isShipwreck = (isSea) ? false : i == hauteurEpave && j == largeurEpave;
-                Boolean isSand = (isSea || isShipwreck) ? false : i == 1 && (j > 2 && j < hauteur-2) || (i == 2 && ((j > 0 && j < 4) || (j > hauteur-5 && j < hauteur-1))) || (i == 3 && ((j == 0 || j == 1 || j == hauteur-1 || j == hauteur-2)));
-
-                if (isSea) type = TypeZone.Mer;
-                else if (isSand) type = TypeZone.Sable;
-                else if (isShipwreck) type = TypeZone.Epave;
-                else {
-                    switch (rand.nextInt(10)) {
-                        case 0 -> type = TypeZone.Buisson;
-                        case 1 -> type = TypeZone.Arbre;
-                        case 2 -> type = TypeZone.Eau;
-                        default -> type = TypeZone.Sol;
-                    }
-                } this.zones[i][j] = new Zone(i, j, type);
-                if (!isSea) zonesToRepaint.add(zones[i][j]);
+        for(int i = 0; i<largeur;i++){
+            for(int j = 0; j<hauteur; j++){
+                if (i == 0 || (i == 1 && (j == 0 || j == 1 || j == 2 || j == hauteur-1 || j == hauteur-2 || j == hauteur-3)) || (i == 2 && (j == 0 || j == hauteur-1)))
+                    zones[i][j] = new Zone(i, j, TypeZone.Mer);
+                else
+                    zones[i][j] = new Zone(i, j, TypeZone.Sol);
             }
         }
 
+        for(int i = 0; i<largeur; i++){
+            for(int j = 0; j<hauteur; j++){
+                if (zones[i][j].getType() == TypeZone.Sol && ((j < hauteur-1 && zones[i][j+1].getType() == TypeZone.Mer) || (j > 0 && zones[i][j-1].getType() == TypeZone.Mer) ||
+                        (i > 0 && zones[i-1][j].getType() == TypeZone.Mer) || (i > 0 && j < hauteur-1 && zones[i-1][j+1].getType() == TypeZone.Mer) || (i > 0 && j > 0 && zones[i-1][j-1].getType() == TypeZone.Mer)))
+                    zones[i][j] = new Zone(i, j, TypeZone.Sable);
+            }
+        }
+
+        zones[hauteurEpave][largeurEpave] = new Zone(hauteurEpave-1, largeurEpave-1, TypeZone.Epave);
+
+        personnages = new ArrayList<Personnage>();
         for (int i = 0; i < nbPersonnage; i++)
-            this.personnages.add(new Personnage(i, hauteurEpave + 1, largeurEpave));
+            personnages.add(new Personnage(i, hauteurEpave+1, largeurEpave));
+
+        //this.c = new Controleur(this);
+        this.dragAndDrop = new DragAndDrop2(personnages);
     }
+
+    /**
+     * Génére l'ile avec ses différentes Zones
+     */
+    /*public void genereIle(){
+        for(int i = largeurEpave; i<largeur;i++){
+            for(int j = hauteurEpave; j<hauteur; j++){
+                zones[i][j] = new Zone(i, j, TypeZone.Sol);
+            }
+        }
+    }*/
 
     /**
      * Renvoie la liste des personnages
@@ -87,65 +106,41 @@ public class Modele {
         return personnages;
     }
 
-    public static int getHeight(){
-        return hauteur;
+    //Provisoire
+    public void setPersonnages(ArrayList<Personnage> personnages) {
+        this.personnages = personnages;
     }
 
-    public static int getWidth(){
-        return largeur;
-    }
-
-    public static int getViePersonnage() {
-        return ViePersonnage;
+    @Override
+    public String toString() {
+        return "Modele{" +
+                "nbPersonnage=" + nbPersonnage +
+                ", personnages=" + personnages +
+                ", stockageEau=" + stockageEau +
+                ", stockageBois=" + stockageBois +
+                ", stockageNourriture=" + stockageNourriture +
+                '}';
     }
 
     public int getNbPersonnage() {
         return nbPersonnage;
     }
 
-    public int getTimerTempete() {
-        return timerTempete;
-    }
-
-    public void setTimerTempete(int timerTempete) {
-        this.timerTempete = timerTempete;
-    }
-
-    /**
-     * Renvoie la zone qui se trouve aux coordonnées fournis
-     * @param x, l'axe des X
-     * @param y, l'axe des Y
-     * @return la zone souhaitée
-     */
-    public Zone getZone(int x, int y){
-        return zones[x][y];
-    }
-    
-    public Zone[][] getZones() {
-        return zones;
-    }
-
     /**
      * Déplace le joueur s'il peut y aller
      */
     public void deplacePersonnage(int numeroPersonnage, int x, int y){
-        if ((x >= 0 && x <= largeur) && (y >= 0 && y <= hauteur))
-            if (zones[x][y].getType() != TypeZone.Mer) {
-                personnages.get(numeroPersonnage).deplace(x, y);
-            }
-        if (zones[x][y].getType() == TypeZone.Eau || zones[x][y].getType() == TypeZone.Arbre || zones[x][y].getType() == TypeZone.Buisson) {
-            new Thread() {
-                public void run() {
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } recolteRessource(numeroPersonnage);
-                    System.out.println("Ressource recoltée");
-                    zones[x][y].setType(TypeZone.Sol);
-                    zonesToRepaint.add(zones[x][y]);
+        System.out.println("Deplacement du personnage");
+        if ((x > 0 && x < largeur)&&(y > 0 && y < hauteur)){
+            System.out.println("valeur vérifié ; " + x + y);
+            Zone z = zones[x][y];
+            System.out.println("type de la zone " + z.getType());
+            switch (z.getType()) {
+                case Mer -> {
                 }
-            }.start();
+                default -> {personnages.get(numeroPersonnage).deplace(x, y);}
+            }
+            System.out.println("je check le perso : " + personnages.get(numeroPersonnage).toString());
         }
     }
 
@@ -154,6 +149,12 @@ public class Modele {
      * @param numeroPersonnage, pour savoir son emplacement
      */
     public void recolteRessource(int numeroPersonnage){
+        /*for (Personnage p :personnages) {
+            Zone z = zones[p.getX()][p.getY()];
+            switch (z){
+                Case
+            }s
+        }*/
         int chanceGraine = (int)(Math.random() * 100);
         Zone z = zones[personnages.get(numeroPersonnage).getX()][personnages.get(numeroPersonnage).getY()];
         switch (z.getType()) {
@@ -261,5 +262,31 @@ public class Modele {
 
             }
         }
+    }
+
+    /**
+     * Renvoie la zone qui se trouve aux coordonnées fournis
+     * @param x, l'axe des X
+     * @param y, l'axe des Y
+     * @return la zone souhaitée
+     */
+    public Zone getZone(int x, int y){
+        return zones[x][y];
+    }
+
+    public static int getHeight(){
+        return hauteur;
+    }
+
+    public static int getWidth(){
+        return largeur;
+    }
+
+    public int getTimerTempete() {
+        return timerTempete;
+    }
+
+    public void setTimerTempete(int timerTempete) {
+        this.timerTempete = timerTempete;
     }
 }
