@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Personnage {
@@ -8,7 +9,8 @@ public class Personnage {
     private int x, y;
     private int vie;
     private boolean vivant = true;
-    private BufferedImage texture;
+    private Image texture;
+    private boolean isActive;
     
     /**
      * Constructeur du personnage
@@ -21,6 +23,7 @@ public class Personnage {
         this.y = y;
         this.vie = Modele.getViePersonnage();
         this.texture = Textures.texture_perso.getTexture();
+        this.isActive = false;
     }
 
     /**
@@ -63,7 +66,7 @@ public class Personnage {
         return vivant;
     }
 
-    public BufferedImage getTexture() {
+    public Image getTexture() {
         return texture;
     }
 
@@ -73,5 +76,17 @@ public class Personnage {
 
     public void setX(int x) {
         this.x = x;
+    }
+
+    public boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setActive(){
+        this.isActive = true;
+    }
+
+    public void setInactive(){
+        this.isActive = false;
     }
 }

@@ -39,10 +39,10 @@ public class Modele {
     private int nbRessourcesVictoire = 100;
     private int timerTempete = 30;
 
-    /** Temps des timer **/
-    private int timerRecolte = 3;
-    private int timerPlantation = 3;
-    private int timerPousse = 5;
+    /** Temps des timer en minutes **/
+    private final int timerRecolte = 3;
+    private final int timerPlantation = 3;
+    private final int timerPousse = 5;
 
     public List<Zone> zonesToRepaint = new ArrayList<Zone>();
 
@@ -57,24 +57,29 @@ public class Modele {
             for(int j = 0; j < hauteur; j++){
                 TypeZone type;
                 Boolean isSea = i == 0 || (i == 1 && (j == 0 || j == 1 || j == 2 || j == hauteur-1 || j == hauteur-2 || j == hauteur-3)) || (i == 2 && (j == 0 || j == hauteur-1));
-                boolean isShipwreck = (isSea) ? false : i == hauteurEpave && j == largeurEpave;
-                Boolean isSand = (isSea || isShipwreck) ? false : i == 1 && (j > 2 && j < hauteur-2) || (i == 2 && ((j > 0 && j < 4) || (j > hauteur-5 && j < hauteur-1))) || (i == 3 && ((j == 0 || j == 1 || j == hauteur-1 || j == hauteur-2)));
+                boolean isShipwreck = !isSea && i == hauteurEpave && j == largeurEpave;
+                Boolean isSand = !isSea && !isShipwreck && (i == 1 && (j > 2 && j < hauteur - 2) || (i == 2 && ((j > 0 && j < 4) || (j > hauteur - 5 && j < hauteur - 1))) || (i == 3 && ((j == 0 || j == 1 || j == hauteur - 1 || j == hauteur - 2))));
 
                 if (isSea) type = TypeZone.Mer;
                 else if (isSand) type = TypeZone.Sable;
                 else if (isShipwreck) type = TypeZone.Epave;
                 else {
-                    switch (rand.nextInt(10)) {
-                        case 0 -> type = TypeZone.Buisson;
-                        case 1 -> type = TypeZone.Arbre;
-                        case 2 -> type = TypeZone.Eau;
+                    switch (rand.nextInt(20)) {
+                        case 0, 1 -> type = TypeZone.Buisson;
+                        case 2, 3 -> type = TypeZone.Arbre;
+                        case 4, 5 -> type = TypeZone.Eau;
+                        case 6 -> type = TypeZone.Rocher;
                         default -> type = TypeZone.Sol;
                     }
                 } this.zones[i][j] = new Zone(i, j, type);
                 if (!isSea) zonesToRepaint.add(zones[i][j]);
             }
         }
-
+        /// Gère le cas ou un rocher se trouve sur l'emplacement de spawn des personnages
+        if (zones[hauteurEpave][largeurEpave].getType() == TypeZone.Rocher) {
+            zones[largeurEpave+1][hauteurEpave].setType(TypeZone.Sol);
+            zonesToRepaint.add(zones[hauteurEpave][largeurEpave]);
+        }
         for (int i = 0; i < nbPersonnage; i++)
             this.personnages.add(new Personnage(i, hauteurEpave + 1, largeurEpave));
     }
@@ -85,6 +90,10 @@ public class Modele {
      */
     public ArrayList<Personnage> getPersonnages() {
         return personnages;
+    }
+
+    public Personnage getPersonnage(int numeroPersonnage) {
+        return personnages.get(numeroPersonnage);
     }
 
     public static int getHeight(){
@@ -130,7 +139,7 @@ public class Modele {
      */
     public void deplacePersonnage(int numeroPersonnage, int x, int y){
         if ((x >= 0 && x <= largeur) && (y >= 0 && y <= hauteur))
-            if (zones[x][y].getType() != TypeZone.Mer) {
+            if (zones[x][y].getType() != TypeZone.Mer && zones[x][y].getType() != TypeZone.Rocher) {
                 personnages.get(numeroPersonnage).deplace(x, y);
             }
         if (zones[x][y].getType() == TypeZone.Eau || zones[x][y].getType() == TypeZone.Arbre || zones[x][y].getType() == TypeZone.Buisson) {
@@ -156,6 +165,7 @@ public class Modele {
     public void recolteRessource(int numeroPersonnage){
         int chanceGraine = (int)(Math.random() * 100);
         Zone z = zones[personnages.get(numeroPersonnage).getX()][personnages.get(numeroPersonnage).getY()];
+        System.out.println(z.getType());
         switch (z.getType()) {
             case Eau -> stockageEau += nbRecolte;
             case Arbre -> {
@@ -210,7 +220,7 @@ public class Modele {
      * @param y, la direction en y
      * @return, la liste des actions possibles
      */
-    public List<String> actionsPossiblesPerso(int numeroPersonnage, int x, int y){
+    /*public List<String> actionsPossiblesPerso(int numeroPersonnage, int x, int y){
         Zone z = zones[x][y];
         List<String> result = null;
         switch (z.getType()){
@@ -225,11 +235,35 @@ public class Modele {
             if (possedeGraine(TypeZone.Buisson)) result.add("Planter buisson");
         }
 
-        if (z.getType() != TypeZone.Mer){
+        if (z.getType() != TypeZone.Mer ||z.getType() != TypeZone.Rocher){
             result.add("Se déplacer");
         }
 
         if (z.getType() == TypeZone.Epave) result.add("Tenter de fuir");
+
+        return result;
+    }*/
+
+    public List<Integer> actionsPossiblesPerso(int numeroPersonnage, int x, int y){
+        Zone z = zones[x][y];
+        List<Integer> result = new ArrayList<>();
+        switch (z.getType()){
+            case Eau -> result.add(1);
+            case Arbre -> result.add(2);
+            case Buisson -> result.add(3);
+            default -> {}
+        }
+
+        if (z.getType() == TypeZone.Sol){
+            if (possedeGraine(TypeZone.Arbre)) result.add(4);
+            if (possedeGraine(TypeZone.Buisson)) result.add(5);
+        }
+
+        if (z.getType() != TypeZone.Mer ||z.getType() != TypeZone.Rocher){
+            result.add(6);
+        }
+
+        if (z.getType() == TypeZone.Epave) result.add(7);
 
         return result;
     }
@@ -261,5 +295,53 @@ public class Modele {
 
             }
         }
+    }
+
+    public void useAction(int numAction, int numPersonnage){
+        System.out.println("numero perso " + numPersonnage);
+        Personnage p = personnages.get(numPersonnage);
+        switch (numAction){
+            case 1 -> recolteRessource(numPersonnage);
+            case 2 -> recolteRessource(numPersonnage);
+            case 3 -> recolteRessource(numPersonnage);
+            case 4 -> planteGraine(TypeZone.Arbre);
+            case 5 -> planteGraine(TypeZone.Buisson);
+            case 7 -> quitterIle(numPersonnage);
+            default -> {}
+        }
+        zonesToRepaint.add(zones[p.getX()][p.getY()]);
+    }
+
+    public int getTimer(int numAction){
+        switch (numAction){
+            case 1,2,3 -> {return timerRecolte;}
+            case 4,5 -> {return timerPlantation;}
+            default -> {}
+        }
+        return -1;
+    }
+
+    public int getStockageBois() {
+        return stockageBois;
+    }
+
+    public int getStockageEau() {
+        return stockageEau;
+    }
+
+    public int getStockageNourriture() {
+        return stockageNourriture;
+    }
+
+    public int getTimerRecolte() {
+        return timerRecolte;
+    }
+
+    public int getTimerPlantation() {
+        return timerPlantation;
+    }
+
+    public int getTimerPousse() {
+        return timerPousse;
     }
 }

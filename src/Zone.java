@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Zone {
@@ -9,7 +10,7 @@ public class Zone {
      */
     private TypeZone type;
 
-    private BufferedImage texture;
+    private Image texture;
 
     /** Constructeur de la zone **/
     public Zone(int x, int y, TypeZone type){
@@ -61,6 +62,7 @@ public class Zone {
         switch (type) {
             case Sol -> this.texture = Textures.texture_grass.getTexture();
             case Sable -> this.texture = Textures.texture_sand.getTexture();
+            case Rocher -> this.texture = Textures.texture_rock.getTexture();
             case Epave -> this.texture = Textures.texture_shipwreck.getTexture();
             case Arbre -> this.texture = (Math.random() < 0.5) ? Textures.texture_tree.getTexture() : Textures.texture_tree_reversed.getTexture();
             case Buisson -> this.texture = (Math.random() < 0.5) ? Textures.texture_bushs.getTexture() : Textures.texture_bushs_reversed.getTexture();
@@ -69,7 +71,7 @@ public class Zone {
         };
     }
 
-    public BufferedImage getTexture() {
+    public Image getTexture() {
         return texture;
     }
 

@@ -28,6 +28,6 @@ class Controleur implements KeyListener {
             case KeyEvent.VK_RIGHT: x += 1; break;
 		}
         modele.deplacePersonnage(0, x, y);
-        vue.repaintVueGrille();
+        // vue.repaintVueGrille();
 	}
 }

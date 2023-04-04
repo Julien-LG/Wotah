@@ -1,8 +1,8 @@
-public class mainGameTimer extends Thread {
+public class MainGameTimer extends Thread {
 
     private Modele model;
 
-    public mainGameTimer(Modele m){
+    public MainGameTimer(Modele m){
         this.model = m;
     }
 
