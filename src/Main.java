@@ -1,3 +1,9 @@
+import Controle.Controleur;
+import Controle.ControleurDragAndDrop;
+import Controle.PauseInGame;
+import Modele.Modele;
+import Vue.CVue;
+
 import java.awt.*;
 
 public class Main {
@@ -8,6 +14,9 @@ public class Main {
             new Controleur(modele, vue);
             new ControleurDragAndDrop(modele, vue);
         });
+        PauseInGame pauseInGame = new PauseInGame();
+
+
 
         /*new Thread() { // Timer de la tempete (la fin du jeu)
             public void run(){
