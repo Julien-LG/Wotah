@@ -16,12 +16,8 @@ public class ActionTimer2 extends Thread {
      */
     //public Modele.ActionTimer2(Modele.Modele m, int time, Modele.Personnage p) throws IllegalArgumentException {
     //public Modele.ActionTimer2(int time, int[] timeBar, JProgressBar bar) throws IllegalArgumentException {
-    public ActionTimer2(Modele m, /*int time, */int numPerso) throws IllegalArgumentException {
+    public ActionTimer2(Modele m, /*int time, */int numPerso) {
         this.m = m;
-        /*if (time <= 0){
-            throw new IllegalArgumentException("Le temps donné doit être supérieur à zéro");
-        }*/
-        //this.time = time;
         System.out.println("num perso actiontimer2: " + numPerso);
         this.numPerso = numPerso;
     }
@@ -29,8 +25,16 @@ public class ActionTimer2 extends Thread {
     public void run(int numAction, int x, int y){
         System.out.println(numPerso);
         Personnage p = m.getPersonnage(numPerso);
-        int timer = m.getTimer(numAction)*60; // On convertit le temps en secondes
+        int timer = m.getTimer(numAction)/60; // On convertit le temps en secondes
         p.setActive();
+        /*while (p.getX() != x && p.getY() != y){
+            try {
+                Thread.sleep(m.getVitesseDeplacement());
+                m.deplacePersonnageUnPas(numPerso, x, y);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }*/
         m.deplacePersonnage(numPerso, x, y);
         while(this.time > 0){
             try {

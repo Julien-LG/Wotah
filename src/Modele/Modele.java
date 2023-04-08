@@ -1,7 +1,9 @@
 package Modele;
 
+import java.awt.*;
 import java.util.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Modele {
     /** Taille de la grille **/
@@ -9,8 +11,8 @@ public class Modele {
     private static final int largeur = 15;
 
     /** Eplacement de l'epave (et donc des joueurs) **/
-    private static final int hauteurEpave = 1;
-    private static final int largeurEpave = 5;
+    private static final int hauteurEpave = 5;
+    private static final int largeurEpave = 1;
 
     /** Vie maximal pour un personnage **/
     private final int nbPersonnage = 1;
@@ -46,6 +48,13 @@ public class Modele {
     private final int timerPlantation = 3;
     private final int timerPousse = 5;
 
+    /** Temps en secondes entre chaque déplacement de zone **/
+    private final int vitesseDeplacement = 5;
+
+    /** Pourcentage de chances de n'avoir qu'une graine **/
+    private final int dropGraineBuisson = 80;
+    private final int dropGraineArbre = 90;
+
     public List<Zone> zonesToRepaint = new ArrayList<Zone>();
 
     /**
@@ -59,7 +68,8 @@ public class Modele {
             for(int j = 0; j < hauteur; j++){
                 TypeZone type;
                 Boolean isSea = i == 0 || (i == 1 && (j == 0 || j == 1 || j == 2 || j == hauteur-1 || j == hauteur-2 || j == hauteur-3)) || (i == 2 && (j == 0 || j == hauteur-1));
-                boolean isShipwreck = !isSea && i == hauteurEpave && j == largeurEpave;
+                //boolean isShipwreck = !isSea && i == hauteurEpave && j == largeurEpave;
+                boolean isShipwreck = !isSea && i == largeurEpave && j == hauteurEpave;
                 Boolean isSand = !isSea && !isShipwreck && (i == 1 && (j > 2 && j < hauteur - 2) || (i == 2 && ((j > 0 && j < 4) || (j > hauteur - 5 && j < hauteur - 1))) || (i == 3 && ((j == 0 || j == 1 || j == hauteur - 1 || j == hauteur - 2))));
 
                 if (isSea) type = TypeZone.Mer;
@@ -78,12 +88,12 @@ public class Modele {
             }
         }
         /// Gère le cas ou un rocher se trouve sur l'emplacement de spawn des personnages
-        if (zones[hauteurEpave][largeurEpave].getType() == TypeZone.Rocher) {
+        if (zones[largeurEpave][hauteurEpave].getType() == TypeZone.Rocher) {
             zones[largeurEpave+1][hauteurEpave].setType(TypeZone.Sol);
             zonesToRepaint.add(zones[hauteurEpave][largeurEpave]);
         }
         for (int i = 0; i < nbPersonnage; i++)
-            this.personnages.add(new Personnage(i, hauteurEpave + 1, largeurEpave));
+            this.personnages.add(new Personnage(i,  largeurEpave+ 1, hauteurEpave));
     }
 
     /**
@@ -144,7 +154,7 @@ public class Modele {
             if (zones[x][y].getType() != TypeZone.Mer && zones[x][y].getType() != TypeZone.Rocher) {
                 personnages.get(numeroPersonnage).deplace(x, y);
             }
-        if (zones[x][y].getType() == TypeZone.Eau || zones[x][y].getType() == TypeZone.Arbre || zones[x][y].getType() == TypeZone.Buisson) {
+        /*if (zones[x][y].getType() == TypeZone.Eau || zones[x][y].getType() == TypeZone.Arbre || zones[x][y].getType() == TypeZone.Buisson) {
             new Thread() {
                 public void run() {
                     try {
@@ -157,11 +167,25 @@ public class Modele {
                     zonesToRepaint.add(zones[x][y]);
                 }
             }.start();
-        }
+        }*/
+    }
+
+    public void deplacePersonnageUnPas(int numeroPersonnage, int x, int y){
+        if ((x >= 0 && x <= largeur) && (y >= 0 && y <= hauteur))
+            if (zones[x][y].getType() != TypeZone.Mer) {
+                if (x > personnages.get(numeroPersonnage).getX())
+                    personnages.get(numeroPersonnage).deplace(x+1, y);
+                else if (x < personnages.get(numeroPersonnage).getX())
+                    personnages.get(numeroPersonnage).deplace(x-1, y);
+                else if (y > personnages.get(numeroPersonnage).getY())
+                    personnages.get(numeroPersonnage).deplace(x, y+1);
+                else if (y < personnages.get(numeroPersonnage).getY())
+                    personnages.get(numeroPersonnage).deplace(x, y-1);
+            }
     }
 
     /**
-     * Controle.Recolte une ressource
+     * Modele.Recolte une ressource
      * @param numeroPersonnage, pour savoir son emplacement
      */
     public void recolteRessource(int numeroPersonnage){
@@ -172,12 +196,12 @@ public class Modele {
             case Eau -> stockageEau += nbRecolte;
             case Arbre -> {
                 stockageBois += nbRecolte;
-                if (chanceGraine < 90) stockageGraineBuisson+=1;
-                else stockageGraineBuisson+=2;
+                if (chanceGraine < dropGraineArbre) stockageGraineArbre+=1;
+                else stockageGraineArbre+=2;
             }
             case Buisson -> {
                 stockageNourriture += nbRecolte;
-                if (chanceGraine < 80) stockageGraineBuisson+=1;
+                if (chanceGraine < dropGraineBuisson) stockageGraineBuisson+=1;
                 else stockageGraineBuisson+=2;
             }
             default -> {}
@@ -220,32 +244,8 @@ public class Modele {
      * @param numeroPersonnage, le numéro du personnage
      * @param x, la direction en x
      * @param y, la direction en y
-     * @return, la liste des actions possibles
+     * @return, la liste des numéros des actions possibles
      */
-    /*public List<String> actionsPossiblesPerso(int numeroPersonnage, int x, int y){
-        Modele.Modele.Zone z = zones[x][y];
-        List<String> result = null;
-        switch (z.getType()){
-            case Eau -> result.add("Récolter eau");
-            case Arbre -> result.add("Récolter bois");
-            case Buisson -> result.add("Récolter nourriture");
-            default -> {}
-        }
-
-        if (z.getType() == Modele.Modele.TypeZone.Sol){
-            if (possedeGraine(Modele.Modele.TypeZone.Arbre)) result.add("Planter arbre");
-            if (possedeGraine(Modele.Modele.TypeZone.Buisson)) result.add("Planter buisson");
-        }
-
-        if (z.getType() != Modele.Modele.TypeZone.Mer ||z.getType() != Modele.Modele.TypeZone.Rocher){
-            result.add("Se déplacer");
-        }
-
-        if (z.getType() == Modele.Modele.TypeZone.Epave) result.add("Tenter de fuir");
-
-        return result;
-    }*/
-
     public List<Integer> actionsPossiblesPerso(int numeroPersonnage, int x, int y){
         Zone z = zones[x][y];
         List<Integer> result = new ArrayList<>();
@@ -261,7 +261,7 @@ public class Modele {
             if (possedeGraine(TypeZone.Buisson)) result.add(5);
         }
 
-        if (z.getType() != TypeZone.Mer ||z.getType() != TypeZone.Rocher){
+        if (z.getType() != TypeZone.Mer && z.getType() != TypeZone.Rocher){
             result.add(6);
         }
 
@@ -283,18 +283,18 @@ public class Modele {
 
             if (nbPersos == 1) { // Partir seul...
                 //Appel de l'affichage de Victoire solo
-
+                System.out.println("Vous avez quitter l'île seul en abondonnant les autres naufragés à leur sort...");
             }
             else if (nbPersos == 0) { //erreur
                 System.out.println("Erreur aucun joueur présent sur l'épave");
             }
             else if (nbPersos == personnages.size()) { // Partir avec tout le monde
                 //Appel de l'affichage de Victoire avec tout le monde
-
+                System.out.println("Vous avez réussi à quitter l'île avec tout le monde !");
             }
             else { // Abandonner quelqu'un
                 //Appel de l'affichage de Victoire avec une partie des naufragés seulement
-
+                System.out.println("Vous etes vivant mais vous avez abandonné " + (personnages.size() - nbPersos) + " personnes sur cette île");
             }
         }
     }
@@ -335,15 +335,7 @@ public class Modele {
         return stockageNourriture;
     }
 
-    public int getTimerRecolte() {
-        return timerRecolte;
-    }
-
-    public int getTimerPlantation() {
-        return timerPlantation;
-    }
-
-    public int getTimerPousse() {
-        return timerPousse;
+    public int getVitesseDeplacement() {
+        return vitesseDeplacement;
     }
 }

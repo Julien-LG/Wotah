@@ -1,4 +1,4 @@
-package Controle;
+package Modele;
 
 import Modele.Modele;
 

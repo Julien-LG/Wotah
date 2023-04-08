@@ -13,6 +13,9 @@ public class CVue {
     private JPanel game = new JPanel();
     private VueGrille vueGrille;
 
+    public final static int SCREEN_SIZE = (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight();
+    public final static int size = SCREEN_SIZE/ Modele.getHeight();
+
     public CVue(Modele modele) {
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -23,19 +26,12 @@ public class CVue {
         GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().setFullScreenWindow(frame);
         
         JLabel background = new JLabel(new ImageIcon(Textures.texture_sea.getTextureNoScale().getScaledInstance(frame.getWidth(), frame.getHeight(), Image.SCALE_DEFAULT)));
-        //afficheRessources(background.getGraphics());
-        //afficheRessources(frame.getGraphics());
-        //int SCREEN_SIZE = (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight();
-        //.drawImage(Modele.Modele.Textures.sprite_sheet.getTexture().getScaledInstance(SCREEN_SIZE/3, SCREEN_SIZE/3, Image.SCALE_DEFAULT), 0, 0, null);
         background.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         vueGrille = new VueGrille(modele);
         background.add(vueGrille);
-        //JLabel stats = new JLabel(new ImageIcon(Modele.Modele.Textures.sprite_sheet.getTexture().getScaledInstance(100, 100, Image.SCALE_DEFAULT)));
-        //stats.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
 
         game.setLayout(new BorderLayout());
         game.add(background);
-        //game.add(stats);
 
         frame.setContentPane(game);
         frame.pack();
@@ -60,46 +56,6 @@ public class CVue {
         }.start();*/
     }
 
-    public void afficheRessources(Graphics g) {
-        int SCREEN_SIZE = (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight();
-        g.drawImage(Textures.sprite_sheet.getTexture().getScaledInstance(SCREEN_SIZE/3, SCREEN_SIZE/3, Image.SCALE_DEFAULT), 0, 0, null);
-
-        JLabel label1 = new JLabel("Test");
-        label1.setBounds(50, 50, 100, 100);
-        //vueGrille.add(label1);
-        frame.add(label1);
-    }
-
-    public void affichePersonnages(Graphics g) {
-        vueGrille.paintPersonnages(g);
-    }
-
-    /*public void afficheDecors(Graphics g) {
-        //Use a gif image
-
-        //vueGrille.paintDecors(g);
-        //g.drawImage(Modele.Modele.Textures.sprite_shark.getTexture(), 0, 750, null);
-        //g.drawImage(SpritesAnimated.sprite_shark.getSprite(), 0, 750, null);
-        //frame.add(new JLabel(new ImageIcon(Modele.Modele.Textures.sprite_shark.getTexture())));
-        JLabel shark = new JLabel(SpritesAnimated.sprite_shark.getSprite());
-
-        Thread thread = new Thread() {
-            public void run() {
-                while (true) {
-                    try {
-                        Thread.sleep(300); // temps de pause entre chaque mise à jour de la barre de chargement
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    System.out.println("yo");
-                    //shark.setLocation(0,0);
-                    shark.setBounds(10, 10, 100, 100);
-                }
-            }
-        };
-        thread.start();
-    }*/
-
     public void newProgressBar(int x, int y){
         final int[] progress = {0};
 
@@ -109,8 +65,6 @@ public class CVue {
 
         progressBar.setStringPainted(true);
         progressBar.setBounds(x, y, 100, 10);
-
-        int size = VueGrille.SCREEN_SIZE/ Modele.getHeight();
 
         // test de centralisation threads bar et action du personnage
         //Modele.ActionTimer thread = new Modele.ActionTimer(300, progress, progressBar);
@@ -128,7 +82,6 @@ public class CVue {
                     progressBar.setValue(progress[0]);
                     progressBar.setBounds(x+(3*size)-3, y, 100, 10);
                 }
-                //progressBar.setVisible(false);
                 frame.remove(progressBar);
                 frame.repaint();
             }
@@ -136,11 +89,12 @@ public class CVue {
         thread.start();
     }
 
+    public void addTempeteTime(){
+        vueGrille.progressBar();
+    }
+
     public void repaintVueGrille() {
         vueGrille.repaint();
-        //afficheDecors(this.vueGrille.getGraphics());
-        //afficheDecors(frame.getGraphics());
-        //afficheRessources(background.getGraphics());
     }
 
     public void addKeyListener(KeyListener kl) {

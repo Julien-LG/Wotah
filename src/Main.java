@@ -13,22 +13,19 @@ public class Main {
             CVue vue = new CVue(modele);
             new Controleur(modele, vue);
             new ControleurDragAndDrop(modele, vue);
-        });
-        PauseInGame pauseInGame = new PauseInGame();
 
-
-
-        /*new Thread() { // Timer de la tempete (la fin du jeu)
-            public void run(){
-                while(modele.getTimerTempete() > 0){
+            // Timer de la tempete (la fin du jeu)
+            new Thread(() -> {
+                while(modele.getTimerTempete() > 0) {
                     try {
-                        Thread.sleep(1000);
-                        //System.out.println("coucou");
+                        Thread.sleep((modele.getTimerTempete()/60 * 1000L)/100);
+                        vue.addTempeteTime();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
-            }
-        }.start();*/
+            }).start();
+        });
+        PauseInGame pauseInGame = new PauseInGame();
     }
 }

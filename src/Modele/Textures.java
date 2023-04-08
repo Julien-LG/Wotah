@@ -1,5 +1,6 @@
 package Modele;
 
+import Vue.CVue;
 import Vue.VueGrille;
 
 import java.awt.*;
@@ -29,16 +30,16 @@ public enum Textures {
         this.texture = reverseImage(texture.texture);
     }
 
+    private final static int size = CVue.size;
+
     public Image getTexture() {
         //Convert bufferedImage to Image
-        int size = VueGrille.SCREEN_SIZE/ Modele.getHeight();
         Image texture = Toolkit.getDefaultToolkit().createImage(this.texture.getSource());
         return texture.getScaledInstance(size, size, Image.SCALE_DEFAULT);
     }
 
     public Image getTextureNoScale() {
         //Convert bufferedImage to Image
-        int size = VueGrille.SCREEN_SIZE/ Modele.getHeight();
         Image texture = Toolkit.getDefaultToolkit().createImage(this.texture.getSource());
         return texture;
     }
