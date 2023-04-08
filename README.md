@@ -1,5 +1,10 @@
 # Wotah
-  Projet de fin de semestre pour le cours PCII.
+  Ce jeu est le projet de fin de semestre pour le cours de PCII en L3 informatique.
+Notre insiparation s'est tournée vers le jeu Starcraft pour sa construction de batiment et son controle d'unités et le jeu de société Galèrapagos pour le coté survie gestion de ressource.
+
+Il en ressort alors un jeu ou l'on controle des personnages seul ou a plusieurs en drag and drop et ou l'objectif est de récolté assez d'eau de bois et de nourriture pour s'enfuir de l'ile on nous avons fait naufrage avant qu'une tempete n'arrive et ne se déchaine.
+
+`2023` - `Java`, `Swing`, `Jeu`, `Langage Objet`, `MVC`, `IntelliJ`
 
 ### Installation
 Pour lancer le projet :
