@@ -6,14 +6,17 @@ Il en ressort alors un jeu ou l'on controle des personnages seul ou a plusieurs 
 
 `2023` - `Java`, `Swing`, `Jeu`, `Langage Objet`, `MVC`, `IntelliJ`
 
-### Installation
+## Installation
 Pour lancer le projet :
 
 •	Prérequis : Java avec un IDE compatible.
 
 •	Mode d’emploi : Importez le projet dans l’IDE, et sélectionner la méthode main de la classe Main, cliquez ensuite sur le bouton « Run ». Le projet est ensuite ouvert, il suffit ensuite de déplacer un joueur en drag and drop à la souris pour voir le menu d’action apparaitre et de cliquer sur celle voulu pour qu’il l’exécute.
 
-### Documents
+## Documents
 Le compte rendu du projet est disponible ici : [Compte rendu](https://github.com/Julien-LG/Wotah/blob/main/Compte_Rendu_Wotah_Final.pdf) 
 
 Le diagramme de gant est quant à lui ici : [Diagramme](https://github.com/Julien-LG/Wotah/blob/main/Wotah_Diagramme_2.pdf)
+
+## Résultat
+![Jeu](Wotah.png)
